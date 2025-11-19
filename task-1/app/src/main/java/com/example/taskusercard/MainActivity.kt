@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -74,7 +75,7 @@ fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
             AsyncImage(
                 model = fotoUrl,
                 contentDescription = "Imagen cargada desde URL",
-                modifier = Modifier.width(50.dp)
+                modifier = Modifier.height(50.dp)
             )
             Text(text = nombre)
             Text(text = status) // Estado
