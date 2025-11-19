@@ -38,10 +38,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CameraPermissionTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    permissionTest( modifier = Modifier.padding(innerPadding))
                 }
             }
         }
