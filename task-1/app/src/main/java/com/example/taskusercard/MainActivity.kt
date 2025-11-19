@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -64,13 +65,12 @@ fun onFollowClick() {
 @Composable
 fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
     var status = "Online" // Estado del usuario
-//    foto =
     Column(modifier = Modifier.padding(16.dp)) {
         Row(){
             AsyncImage(
                 model = fotoUrl,
                 contentDescription = "Imagen cargada desde URL",
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.width(50.dp)
             )
             Text(text = nombre)
             Text(text = status) // Estado
