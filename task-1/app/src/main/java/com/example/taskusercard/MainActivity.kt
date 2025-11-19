@@ -6,7 +6,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.content.MediaType.Companion.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +40,7 @@ class MainActivity : ComponentActivity() {
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
+                    UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", ::onFollowClick)
                 }
             }
         }
@@ -66,7 +70,7 @@ fun onFollowClick() {
 fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
     var status = "Online" // Estado del usuario
     Column(modifier = Modifier.padding(16.dp)) {
-        Row(){
+        Row{
             AsyncImage(
                 model = fotoUrl,
                 contentDescription = "Imagen cargada desde URL",
@@ -75,8 +79,10 @@ fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
             Text(text = nombre)
             Text(text = status) // Estado
         }
-        Button( onClick = onFollowClick) {
-            Text(text = if (status == "Online") "Follow" else "Unfollow")
+        Box( modifier = Modifier.padding(top = 8.dp).background(color = Color.Green)) {
+            Button( onClick = onFollowClick) {
+                Text(text = if (status == "Online") "Follow" else "Unfollow")
+            }
         }
     }
 }
