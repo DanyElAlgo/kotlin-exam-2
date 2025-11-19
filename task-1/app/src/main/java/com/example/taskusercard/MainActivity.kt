@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.taskusercard.ui.theme.TaskUserCardTheme
 
-
+import coil.compose.AsyncImage
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,9 +67,11 @@ fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
 //    foto =
     Column(modifier = Modifier.padding(16.dp)) {
         Row(){
-            Image(
-                painter = painterResource(id = R.drawable.pvz_logo), // Arreglar cuando recuerde cómo se importaban fotos de urls
-                contentDescription = null)
+            AsyncImage(
+                model = fotoUrl,
+                contentDescription = "Imagen cargada desde URL",
+                modifier = Modifier.fillMaxSize()
+            )
             Text(text = nombre)
             Text(text = status) // Estado
         }
