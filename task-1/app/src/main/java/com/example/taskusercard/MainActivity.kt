@@ -37,23 +37,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             TaskUserCardTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", ::onFollowClick)
+                    UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", ::onFollowClick, modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
 
 fun Context(){ // patron state
@@ -68,7 +56,7 @@ fun onFollowClick() {
     }
 }
 @Composable
-fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
+fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit, modifier: Modifier = Modifier) {
     var status = "Online" // Estado del usuario
     Column(modifier = Modifier.padding(16.dp)) {
         Row{
