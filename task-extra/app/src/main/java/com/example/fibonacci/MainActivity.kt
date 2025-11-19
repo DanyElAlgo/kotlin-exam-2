@@ -50,7 +50,7 @@ fun Greeting(name: String, n: Int, modifier: Modifier = Modifier) {
         )
         Row{
             var x = 0
-            while (x < n) {
+            while (x <= n) {
                 Text(
                     text = "${Fibo(x)}; ",
                     modifier = modifier
