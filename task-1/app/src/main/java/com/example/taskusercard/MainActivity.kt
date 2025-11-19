@@ -50,10 +50,17 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-fun onFollowClick() {
-    // Lógica para seguir al usuario
-}
+fun Context(){ // patron state
 
+}
+var status = "Online"
+fun onFollowClick() {
+    if(status != "Followed"){
+    status = "Followed"}
+    else{
+        status = "Online"
+    }
+}
 @Composable
 fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
     var status = "Online" // Estado del usuario
@@ -66,8 +73,8 @@ fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
             Text(text = nombre)
             Text(text = status) // Estado
         }
-        Button(onClick = onFollowClick) {
-            Text(text = "Follow") // Botón de seguir
+        Button( onClick = onFollowClick) {
+            Text(text = if (status == "Online") "Follow" else "Unfollow")
         }
     }
 }
@@ -77,6 +84,6 @@ fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
 fun GreetingPreview() {
     TaskUserCardTheme {
 //        Greeting("Android")
-        UserCard()
+        UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", ::onFollowClick)
     }
 }
