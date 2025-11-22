@@ -6,10 +6,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.content.MediaType.Companion.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -18,7 +21,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,50 +41,55 @@ class MainActivity : ComponentActivity() {
         setContent {
             TaskUserCardTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    var currentState by remember { mutableStateOf<UserState>(OnlineState) }
+                    UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", currentState, onButtonClick = {currentState = currentState.toggle()}, modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+sealed interface UserState {
+    val statusText: String
+    val buttonText: String
+    val statusColor: Color
+    fun toggle(): UserState
+}
+data object OnlineState : UserState {
+    override val statusText = "Online"
+    override val buttonText = "Follow"
+    override val statusColor = Color.Gray
+    override fun toggle() = FollowedState // Transition to Followed
+}
+data object FollowedState : UserState {
+    override val statusText = "Followed"
+    override val buttonText = "Unfollow"
+    override val statusColor = Color.Green
+    override fun toggle() = OnlineState // Transition back to Online
 }
 
-fun Context(){ // patron state
 
-}
-var status = "Online"
-fun onFollowClick() {
-    if(status != "Followed"){
-    status = "Followed"}
-    else{
-        status = "Online"
-    }
-}
+
 @Composable
-fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
-    var status = "Online" // Estado del usuario
+fun UserCard(nombre: String, fotoUrl: String, state: UserState, onButtonClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Row(){
+        Row{
             AsyncImage(
                 model = fotoUrl,
                 contentDescription = "Imagen cargada desde URL",
-                modifier = Modifier.width(50.dp)
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(50.dp)
             )
-            Text(text = nombre)
-            Text(text = status) // Estado
+            Column{
+                Text(text = nombre)
+                Text(text = state.statusText, color = state.statusColor)
+            }
         }
-        Button( onClick = onFollowClick) {
-            Text(text = if (status == "Online") "Follow" else "Unfollow")
+        Box( modifier = Modifier.padding(top = 8.dp)) {
+            Button( onClick = onButtonClick) {
+                Text(text = state.buttonText)
+            }
         }
     }
 }
@@ -86,6 +99,6 @@ fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit) {
 fun GreetingPreview() {
     TaskUserCardTheme {
 //        Greeting("Android")
-        UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", ::onFollowClick)
+        UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", OnlineState, {})
     }
 }
