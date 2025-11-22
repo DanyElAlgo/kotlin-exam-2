@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TaskUserCardTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", ::onFollowClick, modifier = Modifier.padding(innerPadding))
+                    UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", OnlineState, onButtonClick = {}, modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -67,20 +67,21 @@ data object FollowedState : UserState {
 
 @Composable
 fun UserCard(nombre: String, fotoUrl: String, state: UserState, onButtonClick: () -> Unit, modifier: Modifier = Modifier) {
-    var status = "Online" // Estado del usuario
     Column(modifier = Modifier.padding(16.dp)) {
         Row{
             AsyncImage(
                 model = fotoUrl,
                 contentDescription = "Imagen cargada desde URL",
-                modifier = Modifier.height(50.dp)
+                modifier = Modifier.height(50.dp).width(50.dp)
             )
-            Text(text = nombre)
-            Text(text = status) // Estado
+            Column{
+                Text(text = nombre)
+                Text(text = state.statusText, color = state.statusColor)
+            }
         }
         Box( modifier = Modifier.padding(top = 8.dp).background(color = Color.Green)) {
             Button( onClick = onButtonClick) {
-                Text(text = if (status == "Online") "Follow" else "Unfollow")
+                Text(text = state.buttonText)
             }
         }
     }
@@ -91,6 +92,6 @@ fun UserCard(nombre: String, fotoUrl: String, state: UserState, onButtonClick: (
 fun GreetingPreview() {
     TaskUserCardTheme {
 //        Greeting("Android")
-        UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", ::onFollowClick)
+        UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", OnlineState, {})
     }
 }
