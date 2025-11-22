@@ -102,6 +102,19 @@ fun PermissionTest(modifier: Modifier = Modifier){
         ) {
             Text("Acceder a la cámara")
         }
+        if (showSettingsButton && !hasCameraPermission) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", context.packageName, null)
+                    }
+                    context.startActivity(intent)
+                }
+            ) {
+                Text("Ir a Configuración")
+            }
+        }
     }
 }
 
