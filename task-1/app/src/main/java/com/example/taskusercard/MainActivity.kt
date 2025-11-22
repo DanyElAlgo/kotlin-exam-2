@@ -21,6 +21,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -37,7 +41,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             TaskUserCardTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", OnlineState, onButtonClick = {}, modifier = Modifier.padding(innerPadding))
+                    var currentState by remember { mutableStateOf<UserState>(OnlineState) }
+                    UserCard("Daniel", "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png", currentState, onButtonClick = {currentState = currentState.toggle()}, modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -72,14 +77,16 @@ fun UserCard(nombre: String, fotoUrl: String, state: UserState, onButtonClick: (
             AsyncImage(
                 model = fotoUrl,
                 contentDescription = "Imagen cargada desde URL",
-                modifier = Modifier.height(50.dp).width(50.dp)
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(50.dp)
             )
             Column{
                 Text(text = nombre)
                 Text(text = state.statusText, color = state.statusColor)
             }
         }
-        Box( modifier = Modifier.padding(top = 8.dp).background(color = Color.Green)) {
+        Box( modifier = Modifier.padding(top = 8.dp)) {
             Button( onClick = onButtonClick) {
                 Text(text = state.buttonText)
             }
