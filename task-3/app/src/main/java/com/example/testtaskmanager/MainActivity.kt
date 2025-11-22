@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.add
@@ -36,7 +37,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import androidx.wear.compose.foundation.weight
 import com.example.testtaskmanager.ui.theme.TestTaskManagerTheme
 import java.util.UUID
 
@@ -90,7 +90,17 @@ fun TaskScreen(
     viewModel: TaskViewModel = viewModel()
 ) {
     var newTaskText by remember { mutableStateOf("") }
-//    Desarrollar pantalla
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(viewModel.tasks, key = { it.id }) { task ->
+            TaskItem(
+                task = task,
+                onCheckedChange = { viewModel.toggleTaskStatus(task.id) },
+                onDeleteClick = { viewModel.deleteTask(task.id) }
+            )
+        }
+    }
 }
 
 @Composable
@@ -109,6 +119,10 @@ fun TaskItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Checkbox(
+                checked = task.isCompleted,
+                onCheckedChange = onCheckedChange
+            )
             Text(
                 text = task.title,
                 modifier = Modifier
@@ -117,6 +131,13 @@ fun TaskItem(
                 textDecoration = if (task.isCompleted) TextDecoration.LineThrough else null,
                 color = if (task.isCompleted) Color.Gray else Color.Unspecified
             )
+            IconButton(onClick = onDeleteClick) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Borrar tarea",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
         }
     }
 }
