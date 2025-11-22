@@ -44,19 +44,29 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun Context(){ // patron state
+sealed interface UserState {
+    val statusText: String
+    val buttonText: String
+    val statusColor: Color
+    fun toggle(): UserState
+}
+data object OnlineState : UserState {
+    override val statusText = "Online"
+    override val buttonText = "Follow"
+    override val statusColor = Color.Gray
+    override fun toggle() = FollowedState // Transition to Followed
+}
+data object FollowedState : UserState {
+    override val statusText = "Followed"
+    override val buttonText = "Unfollow"
+    override val statusColor = Color.Green
+    override fun toggle() = OnlineState // Transition back to Online
+}
 
-}
-var status = "Online"
-fun onFollowClick() {
-    if(status != "Followed"){
-    status = "Followed"}
-    else{
-        status = "Online"
-    }
-}
+
+
 @Composable
-fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit, modifier: Modifier = Modifier) {
+fun UserCard(nombre: String, fotoUrl: String, state: UserState, onButtonClick: () -> Unit, modifier: Modifier = Modifier) {
     var status = "Online" // Estado del usuario
     Column(modifier = Modifier.padding(16.dp)) {
         Row{
@@ -69,7 +79,7 @@ fun UserCard(nombre: String, fotoUrl: String, onFollowClick: () -> Unit, modifie
             Text(text = status) // Estado
         }
         Box( modifier = Modifier.padding(top = 8.dp).background(color = Color.Green)) {
-            Button( onClick = onFollowClick) {
+            Button( onClick = onButtonClick) {
                 Text(text = if (status == "Online") "Follow" else "Unfollow")
             }
         }
