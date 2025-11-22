@@ -7,20 +7,31 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.fibonacci.ui.theme.FibonacciTheme
+import androidx.compose.ui.unit.dp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            FibonacciTheme {
+            MaterialTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
                         "Android",
@@ -29,6 +40,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+
         }
     }
 }
@@ -38,17 +50,36 @@ fun Fibo(n: Int): Int { // Retornar la secuencia de Fibonacci desde 0 hasta la p
 }
 
 @Composable
-fun Greeting(name: String, n: Int, modifier: Modifier = Modifier) {
-    Column{
+fun Greeting(name: String, n: Int, modifier: Modifier = Modifier.padding(16.dp)) {
+    var textInput by remember { mutableStateOf("10") }
+    // State for the number used in calculation (Int)
+    var fiboNumber by remember { mutableIntStateOf(10) }
+    Column {
         Text(
             text = "Hello $name!",
             modifier = modifier
         )
+        OutlinedTextField(
+            value = textInput,
+            onValueChange = { textInput = it },
+            label = { Text("Enter a number (n)") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Button(
+            onClick = {
+                // Convert string input to Int, default to 0 if invalid
+                fiboNumber = textInput.toIntOrNull() ?: 0
+            },
+            modifier = Modifier.padding(vertical = 16.dp)
+        ) {
+            Text("Calculate")
+        }
         Text(
             text = "Fibonacci of $n is ${Fibo(10)}",
             modifier = modifier
         )
-        Row{
+        Row {
             var x = 0
             while (x <= n) {
                 Text(
@@ -64,7 +95,7 @@ fun Greeting(name: String, n: Int, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    FibonacciTheme {
+    MaterialTheme {
         Greeting("Android", 10)
     }
 }
