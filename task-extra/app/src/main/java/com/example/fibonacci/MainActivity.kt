@@ -45,14 +45,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun Fibo(n: Int): Int { // Retornar la secuencia de Fibonacci desde 0 hasta la posición n
+fun Fibo(n: Int): Int {
     return if (n <= 1) n else Fibo(n - 1) + Fibo(n - 2)
 }
 
 @Composable
 fun Greeting(name: String, n: Int, modifier: Modifier = Modifier.padding(16.dp)) {
     var textInput by remember { mutableStateOf("10") }
-    // State for the number used in calculation (Int)
     var fiboNumber by remember { mutableIntStateOf(10) }
     Column {
         Text(
@@ -68,7 +67,6 @@ fun Greeting(name: String, n: Int, modifier: Modifier = Modifier.padding(16.dp))
         )
         Button(
             onClick = {
-                // Convert string input to Int, default to 0 if invalid
                 fiboNumber = textInput.toIntOrNull() ?: 0
             },
             modifier = Modifier.padding(vertical = 16.dp)
@@ -76,18 +74,23 @@ fun Greeting(name: String, n: Int, modifier: Modifier = Modifier.padding(16.dp))
             Text("Calculate")
         }
         Text(
-            text = "Fibonacci of $n is ${Fibo(10)}",
+            text = "Fibonacci of $fiboNumber is ${Fibo(fiboNumber)}",
             modifier = modifier
         )
-        Row {
+        Row(modifier = Modifier.padding(top = 8.dp)) {
             var x = 0
-            while (x <= n) {
-                Text(
-                    text = "${Fibo(x)}; ",
-                    modifier = modifier
-                )
+            // Limit loop to prevent freezing if user types a huge number accidentally
+            val safeLimit = if (fiboNumber > 20) 20 else fiboNumber
+
+            var sequenceString = ""
+            while (x <= safeLimit) {
+                sequenceString += "${Fibo(x)}; "
                 x += 1
             }
+            Text(text = sequenceString)
+        }
+        if (fiboNumber > 20) {
+            Text("(Sequence display capped at 20 for UI safety)")
         }
     }
 }
